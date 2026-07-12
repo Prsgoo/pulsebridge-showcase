@@ -4,7 +4,8 @@ coverage/
 .nx/cache
 .nx/workspace-data
 *.tsbuildinfo
-.env
+.env*
+!.env.example
 .npmrc
 *.local
 .vite/

@@ -9,10 +9,6 @@ import { buildApp } from "./server.js";
 import { createAuthGuard } from "./auth.js";
 import { getInstalledVersion } from "./updateChecker.js";
 
-// ---------------------------------------------------------------------------
-// Logger
-// ---------------------------------------------------------------------------
-
 function ts(): string {
   return new Date().toLocaleTimeString("en-GB", {
     hour: "2-digit",
@@ -41,10 +37,6 @@ const logger: PulseLogger = {
     ),
   debug: (_msg, _meta?) => {},
 };
-
-// ---------------------------------------------------------------------------
-// Main
-// ---------------------------------------------------------------------------
 
 async function main(): Promise<void> {
   // Go up one level from dist/ to reach the project root where package.json lives.

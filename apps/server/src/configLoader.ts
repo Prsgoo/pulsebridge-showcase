@@ -5,10 +5,6 @@ import { z } from "zod";
 // keys in their manifest; the host provisions values out-of-band (env vars,
 // `PB_SECRET__*`) and the core encrypts them at rest. See coreBootstrap.ts.
 
-// ---------------------------------------------------------------------------
-// Schema
-// ---------------------------------------------------------------------------
-
 const pluginEntrySchema = z.object({
   /** npm package name, e.g. "@prsgoo/integration-openweather" */
   package: z.string().min(1),
@@ -60,10 +56,6 @@ const serverConfigSchema = z.object({
 
 export type ServerConfig = z.infer<typeof serverConfigSchema>;
 export type PluginEntry = z.infer<typeof pluginEntrySchema>;
-
-// ---------------------------------------------------------------------------
-// Loader
-// ---------------------------------------------------------------------------
 
 export async function loadConfig(configPath: string): Promise<ServerConfig> {
   let raw: string;

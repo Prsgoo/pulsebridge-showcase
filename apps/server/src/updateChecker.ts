@@ -10,20 +10,12 @@ const [SHELL_EXE, SHELL_PREFIX] =
     ? (["cmd.exe", ["/c", "npm"]] as const)
     : (["npm", []] as const);
 
-// ---------------------------------------------------------------------------
-// Types
-// ---------------------------------------------------------------------------
-
 export interface PluginUpdateInfo {
   package: string;
   current: string;
   latest: string;
   hasUpdate: boolean;
 }
-
-// ---------------------------------------------------------------------------
-// Helpers
-// ---------------------------------------------------------------------------
 
 export async function getInstalledVersion(
   packageName: string,
@@ -65,7 +57,6 @@ async function checkPackage(
   packageName: string,
   serverRoot: string,
 ): Promise<PluginUpdateInfo | null> {
-  // Both lookups run in parallel per package.
   const [current, latest] = await Promise.all([
     getInstalledVersion(packageName, serverRoot),
     getLatestVersion(packageName),
@@ -80,10 +71,6 @@ async function checkPackage(
     hasUpdate: current !== latest,
   };
 }
-
-// ---------------------------------------------------------------------------
-// Public API
-// ---------------------------------------------------------------------------
 
 /**
  * Checks all installed plugins against the registry in parallel.
