@@ -1,0 +1,229 @@
+{
+  "info": {
+    "name": "PulseBridge Server",
+    "description": "All endpoints for the PulseBridge standalone server.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://localhost:3000",
+      "type": "string"
+    },
+    {
+      "key": "apiKey",
+      "value": "",
+      "type": "string",
+      "description": "Set to the value of PULSEBRIDGE_API_KEY env var on the server. Required for write endpoints when the env var is set."
+    }
+  ],
+  "item": [
+    {
+      "name": "Health",
+      "item": [
+        {
+          "name": "GET /health",
+          "request": {
+            "method": "GET",
+            "url": "{{baseUrl}}/health",
+            "description": "Returns platform status, whether the scheduler is running, and a summary of all plugin states."
+          }
+        }
+      ]
+    },
+    {
+      "name": "Plugins",
+      "item": [
+        {
+          "name": "GET /plugins",
+          "request": {
+            "method": "GET",
+            "url": "{{baseUrl}}/plugins",
+            "description": "Lists all registered plugins with their current status, last run time, and any errors."
+          }
+        },
+        {
+          "name": "GET /plugins/updates",
+          "request": {
+            "method": "GET",
+            "url": "{{baseUrl}}/plugins/updates",
+            "description": "Checks each installed plugin against the registry and returns current vs latest version. Only plugins listed in pulsebridge.config.json are checked."
+          }
+        },
+        {
+          "name": "POST /plugins/update (specific)",
+          "request": {
+            "method": "POST",
+            "url": "{{baseUrl}}/plugins/update",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "X-Api-Key", "value": "{{apiKey}}" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"package\": \"@prsgoo/integration-coingecko\"\n}"
+            },
+            "description": "Updates a specific plugin to its latest registry version. Requires X-Api-Key when PULSEBRIDGE_API_KEY is set on the server. Call POST /restart to apply."
+          }
+        },
+        {
+          "name": "POST /plugins/update (all)",
+          "request": {
+            "method": "POST",
+            "url": "{{baseUrl}}/plugins/update",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "X-Api-Key", "value": "{{apiKey}}" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"all\": true\n}"
+            },
+            "description": "Updates all plugins that have a newer version available. Requires X-Api-Key when PULSEBRIDGE_API_KEY is set on the server. Call POST /restart to apply."
+          }
+        },
+        {
+          "name": "POST /plugins/install",
+          "request": {
+            "method": "POST",
+            "url": "{{baseUrl}}/plugins/install",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "X-Api-Key", "value": "{{apiKey}}" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"package\": \"@prsgoo/integration-coingecko\",\n  \"config\": {\n    \"coins\": [\"bitcoin\", \"ethereum\", \"solana\", \"binancecoin\"]\n  },\n  \"pollIntervalMs\": 30000\n}"
+            },
+            "description": "Installs a plugin package via npm and adds it to pulsebridge.config.json. Requires X-Api-Key when PULSEBRIDGE_API_KEY is set on the server. Call POST /restart to load it."
+          }
+        },
+        {
+          "name": "DELETE /plugins",
+          "request": {
+            "method": "DELETE",
+            "url": "{{baseUrl}}/plugins",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "X-Api-Key", "value": "{{apiKey}}" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"package\": \"@prsgoo/integration-coingecko\"\n}"
+            },
+            "description": "Uninstalls a plugin package via npm and removes it from pulsebridge.config.json. Requires X-Api-Key when PULSEBRIDGE_API_KEY is set on the server. Call POST /restart to apply."
+          }
+        }
+      ]
+    },
+    {
+      "name": "Views",
+      "item": [
+        {
+          "name": "GET /views",
+          "request": {
+            "method": "GET",
+            "url": "{{baseUrl}}/views",
+            "description": "Returns an array of all view IDs currently available."
+          }
+        },
+        {
+          "name": "GET /views/weather-feed",
+          "request": {
+            "method": "GET",
+            "url": "{{baseUrl}}/views/weather-feed",
+            "description": "Latest weather feed view — one entry per configured city."
+          }
+        },
+        {
+          "name": "GET /views/crypto-ticker",
+          "request": {
+            "method": "GET",
+            "url": "{{baseUrl}}/views/crypto-ticker",
+            "description": "Live crypto ticker — price, 24h change, and direction (up/down/flat) vs previous poll."
+          }
+        },
+        {
+          "name": "GET /views/daily-digest",
+          "request": {
+            "method": "GET",
+            "url": "{{baseUrl}}/views/daily-digest",
+            "description": "Aggregated daily digest — combines weather highlights, crypto highlights, and NASA APOD."
+          }
+        }
+      ]
+    },
+    {
+      "name": "Records",
+      "item": [
+        {
+          "name": "GET /records",
+          "request": {
+            "method": "GET",
+            "url": "{{baseUrl}}/records",
+            "description": "Lists all record types declared by registered integration plugins. Use these type names to query raw records without needing a processor."
+          }
+        },
+        {
+          "name": "GET /records/space.solar-flare",
+          "request": {
+            "method": "GET",
+            "url": "{{baseUrl}}/records/space.solar-flare",
+            "description": "Raw solar flare records from NASA DONKI — no processor required."
+          }
+        },
+        {
+          "name": "GET /records/weather.current",
+          "request": {
+            "method": "GET",
+            "url": "{{baseUrl}}/records/weather.current",
+            "description": "Raw current weather records from OpenWeatherMap."
+          }
+        },
+        {
+          "name": "GET /records/crypto.price",
+          "request": {
+            "method": "GET",
+            "url": "{{baseUrl}}/records/crypto.price",
+            "description": "Raw crypto price records from CoinGecko."
+          }
+        },
+        {
+          "name": "GET /records/space.apod",
+          "request": {
+            "method": "GET",
+            "url": "{{baseUrl}}/records/space.apod",
+            "description": "Raw NASA Astronomy Picture of the Day records."
+          }
+        }
+      ]
+    },
+    {
+      "name": "Events (SSE)",
+      "item": [
+        {
+          "name": "GET /events",
+          "request": {
+            "method": "GET",
+            "url": "{{baseUrl}}/events",
+            "description": "Server-Sent Events stream. Emits 'view:updated' whenever a processor view changes, 'plugin:status-changed' on plugin state transitions, and a 'ping' every 30s to keep the connection alive. Open in a browser to watch events in real time."
+          }
+        }
+      ]
+    },
+    {
+      "name": "Lifecycle",
+      "item": [
+        {
+          "name": "POST /restart",
+          "request": {
+            "method": "POST",
+            "url": "{{baseUrl}}/restart",
+            "header": [{ "key": "X-Api-Key", "value": "{{apiKey}}" }],
+            "description": "Gracefully exits the process (code 0). Requires X-Api-Key when PULSEBRIDGE_API_KEY is set on the server. Under a process manager (PM2, Docker) the process will restart automatically."
+          }
+        }
+      ]
+    }
+  ]
+}

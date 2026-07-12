@@ -1,0 +1,48 @@
+{
+  "name": "server",
+  "version": "0.1.0",
+  "description": "Standalone HTTP server for PulseBridge — exposes plugin views and real-time SSE updates.",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "start": "node --env-file=.env dist/index.js",
+    "start:config": "node --env-file=.env dist/index.js pulsebridge.config.json",
+    "dev": "npm run build && npm run start:config",
+    "pm2:start": "npm run build && pm2 start pm2.config.cjs",
+    "pm2:stop": "pm2 stop pulsebridge-server",
+    "pm2:logs": "pm2 logs pulsebridge-server",
+    "typecheck": "tsc -p tsconfig.json --noEmit",
+    "test": "vitest run",
+    "clean": "rimraf dist"
+  },
+  "dependencies": {
+    "@hono/node-server": "^1.14.0",
+    "@prsgoo/integration-cloudflare-radar": "^0.1.0",
+    "@prsgoo/integration-coingecko": "^0.1.0",
+    "@prsgoo/integration-finnhub-markets": "^0.1.0",
+    "@prsgoo/integration-fred-economics": "^0.1.0",
+    "@prsgoo/integration-gdelt-news": "^0.1.0",
+    "@prsgoo/integration-nasa-apod": "^0.1.0",
+    "@prsgoo/integration-nasa-donki": "^0.1.0",
+    "@prsgoo/integration-nvd-cve": "^0.1.0",
+    "@prsgoo/integration-open-elevation": "^0.1.0",
+    "@prsgoo/integration-openaq-air": "^0.1.0",
+    "@prsgoo/integration-openweather": "^0.1.0",
+    "@prsgoo/integration-usgs-earthquakes": "^0.1.0",
+    "@prsgoo/processor-crypto-ticker": "^0.1.0",
+    "@prsgoo/processor-daily-digest": "^0.1.0",
+    "@prsgoo/processor-seismic-feed": "^0.1.0",
+    "@prsgoo/processor-weather-feed": "^0.1.0",
+    "hono": "^4.7.0",
+    "ioredis": "^5.6.0",
+    "pm2": "^6.0.14",
+    "pulsebridge": "^0.1.0",
+    "zod": "^4.3.6"
+  },
+  "devDependencies": {
+    "@types/node": "^25.5.0",
+    "rimraf": "^6.1.3",
+    "vitest": "^3.2.4"
+  }
+}

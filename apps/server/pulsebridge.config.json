@@ -1,0 +1,119 @@
+{
+  "server": {
+    "port": 3000,
+    "host": "0.0.0.0"
+  },
+  "redis": {
+    "url": "redis://localhost:6379"
+  },
+  "core": {
+    "executionTimeoutMs": 30000,
+    "processorTimeoutMs": 10000,
+    "maxConsecutiveFailures": 3
+  },
+  "plugins": [
+    {
+      "package": "@prsgoo/integration-openweather",
+      "config": {
+        "locations": ["London", "Tokyo", "New York", "Sydney", "Berlin"],
+        "units": "metric"
+      },
+      "pollIntervalMs": 180000
+    },
+    {
+      "package": "@prsgoo/integration-nasa-apod",
+      "config": {
+        "count": 3
+      },
+      "pollIntervalMs": 1800000
+    },
+    {
+      "package": "@prsgoo/integration-coingecko",
+      "config": {
+        "coins": ["bitcoin", "ethereum", "solana", "binancecoin"]
+      },
+      "pollIntervalMs": 30000
+    },
+    {
+      "package": "@prsgoo/processor-weather-feed"
+    },
+    {
+      "package": "@prsgoo/processor-crypto-ticker"
+    },
+    {
+      "package": "@prsgoo/processor-daily-digest"
+    },
+    {
+      "package": "@prsgoo/processor-seismic-feed"
+    },
+    {
+      "package": "@prsgoo/integration-nasa-donki",
+      "config": {
+        "lookbackDays": 7
+      }
+    },
+    {
+      "package": "@prsgoo/integration-usgs-earthquakes",
+      "config": {
+        "minMagnitude": 2.5
+      },
+      "pollIntervalMs": 300000
+    },
+    {
+      "package": "@prsgoo/integration-fred-economics",
+      "config": {
+        "series": ["FEDFUNDS", "CPIAUCSL", "UNRATE", "GDP", "DGS10"]
+      },
+      "pollIntervalMs": 3600000
+    },
+    {
+      "package": "@prsgoo/integration-finnhub-markets",
+      "config": {
+        "symbols": [
+          "AAPL",
+          "MSFT",
+          "GOOGL",
+          "AMZN",
+          "META",
+          "TSLA",
+          "SPY",
+          "QQQ"
+        ]
+      },
+      "pollIntervalMs": 60000
+    },
+    {
+      "package": "@prsgoo/integration-gdelt-news",
+      "config": {
+        "query": "(war OR conflict OR disaster OR earthquake OR storm)",
+        "maxRecords": 50,
+        "timespan": "1h"
+      },
+      "pollIntervalMs": 900000
+    },
+    {
+      "package": "@prsgoo/integration-nvd-cve",
+      "config": {
+        "lookbackHours": 24,
+        "severity": ["CRITICAL", "HIGH"]
+      },
+      "pollIntervalMs": 3600000
+    },
+    {
+      "package": "@prsgoo/integration-cloudflare-radar",
+      "config": {},
+      "pollIntervalMs": 900000
+    },
+    {
+      "package": "@prsgoo/integration-openaq-air",
+      "config": {
+        "locations": [5753480]
+      },
+      "pollIntervalMs": 1800000
+    },
+    {
+      "package": "@prsgoo/integration-open-elevation",
+      "config": {}
+    }
+  ]
+}

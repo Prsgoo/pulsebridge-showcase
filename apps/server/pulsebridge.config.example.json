@@ -1,0 +1,45 @@
+{
+  "server": {
+    "port": 3000,
+    "host": "0.0.0.0"
+  },
+  "redis": {
+    "url": "redis://localhost:6379"
+  },
+  "core": {
+    "executionTimeoutMs": 30000,
+    "processorTimeoutMs": 10000,
+    "maxConsecutiveFailures": 3
+  },
+  "plugins": [
+    {
+      "package": "@prsgoo/integration-openweather",
+      "config": {
+        "locations": ["London", "Tokyo", "New York", "Sydney", "Berlin"],
+        "units": "metric"
+      },
+      "pollIntervalMs": 180000
+    },
+    {
+      "package": "@prsgoo/integration-nasa-apod",
+      "config": { "count": 3 },
+      "pollIntervalMs": 1800000
+    },
+    {
+      "package": "@prsgoo/integration-coingecko",
+      "config": {
+        "coins": ["bitcoin", "ethereum", "solana", "binancecoin"]
+      },
+      "pollIntervalMs": 30000
+    },
+    {
+      "package": "@prsgoo/processor-weather-feed"
+    },
+    {
+      "package": "@prsgoo/processor-crypto-ticker"
+    },
+    {
+      "package": "@prsgoo/processor-daily-digest"
+    }
+  ]
+}

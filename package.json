@@ -1,0 +1,35 @@
+{
+  "name": "pulsebridge-showcase",
+  "version": "0.1.0",
+  "private": true,
+  "description": "A real-world PulseBridge deployment — a config-driven integration server and a live React dashboard. Runs day-to-day on a home server and as a public demo.",
+  "type": "module",
+  "workspaces": [
+    "libs/*",
+    "apps/*"
+  ],
+  "scripts": {
+    "build": "nx run-many -t build",
+    "typecheck": "nx run-many -t typecheck",
+    "test": "nx run-many -t test",
+    "lint": "eslint \"apps/**/src/**/*.{ts,tsx}\" \"libs/**/src/**/*.ts\"",
+    "dev:server": "nx run server:dev",
+    "dev:webapp": "nx run webapp:dev",
+    "format": "prettier --write .",
+    "format:check": "prettier --check .",
+    "graph": "nx graph",
+    "prepare": "husky"
+  },
+  "devDependencies": {
+    "@commitlint/cli": "^20.5.0",
+    "@commitlint/config-conventional": "^20.5.0",
+    "@eslint/js": "^10.0.1",
+    "eslint": "^10.1.0",
+    "eslint-config-prettier": "^10.1.8",
+    "husky": "^9.1.7",
+    "nx": "^22.7.1",
+    "prettier": "3.8.1",
+    "typescript": "^5.9.3",
+    "typescript-eslint": "^8.57.2"
+  }
+}

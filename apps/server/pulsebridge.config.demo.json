@@ -1,0 +1,39 @@
+{
+  "server": {
+    "port": 3000,
+    "host": "0.0.0.0"
+  },
+  "core": {
+    "executionTimeoutMs": 30000,
+    "processorTimeoutMs": 10000,
+    "maxConsecutiveFailures": 3
+  },
+  "plugins": [
+    {
+      "package": "@prsgoo/integration-coingecko",
+      "config": {
+        "coins": ["bitcoin", "ethereum", "solana", "binancecoin"]
+      },
+      "pollIntervalMs": 30000
+    },
+    {
+      "package": "@prsgoo/processor-crypto-ticker"
+    },
+    {
+      "package": "@prsgoo/integration-usgs-earthquakes",
+      "config": {
+        "minMagnitude": 2.5
+      },
+      "pollIntervalMs": 300000
+    },
+    {
+      "package": "@prsgoo/integration-gdelt-news",
+      "config": {
+        "query": "(earthquake OR storm OR disaster OR wildfire)",
+        "maxRecords": 25,
+        "timespan": "60min"
+      },
+      "pollIntervalMs": 900000
+    }
+  ]
+}
