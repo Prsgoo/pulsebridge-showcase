@@ -3,10 +3,6 @@ import { getConnInfo } from "@hono/node-server/conninfo";
 import type { MiddlewareHandler } from "hono";
 import type { PulseLogger } from "pulsebridge";
 
-// ---------------------------------------------------------------------------
-// Configuration
-// ---------------------------------------------------------------------------
-
 const API_KEY_ENV = "PULSEBRIDGE_API_KEY";
 
 /** Reject keys shorter than this as misconfiguration — they offer little protection. */
@@ -22,17 +18,9 @@ const CLEANUP_INTERVAL_MS = FAILURE_WINDOW_MS;
 
 const UNKNOWN_CLIENT = "unknown";
 
-// ---------------------------------------------------------------------------
-// Error shape (matches server.ts)
-// ---------------------------------------------------------------------------
-
 function err(message: string): { error: { message: string } } {
   return { error: { message } };
 }
-
-// ---------------------------------------------------------------------------
-// Constant-time key comparison
-// ---------------------------------------------------------------------------
 
 /**
  * Compares two strings in constant time regardless of length. Both inputs are
@@ -44,10 +32,6 @@ function constantTimeEquals(a: string, b: string): boolean {
   const digestB = createHash("sha256").update(b).digest();
   return timingSafeEqual(digestA, digestB);
 }
-
-// ---------------------------------------------------------------------------
-// Per-client rate limiting
-// ---------------------------------------------------------------------------
 
 interface AttemptRecord {
   failures: number;
@@ -115,10 +99,6 @@ function clientIdOf(c: Parameters<MiddlewareHandler>[0]): string {
     return UNKNOWN_CLIENT;
   }
 }
-
-// ---------------------------------------------------------------------------
-// Auth guard factory
-// ---------------------------------------------------------------------------
 
 export interface AuthGuard {
   /** Middleware that protects write endpoints. */

@@ -13,17 +13,9 @@ import {
 import type { ServerConfig } from "./configLoader.js";
 import { loadPluginsFromPackage } from "./pluginLoader.js";
 
-// ---------------------------------------------------------------------------
-// Result type
-// ---------------------------------------------------------------------------
-
 export interface BootResult {
   core: PulseBridgeCore;
 }
-
-// ---------------------------------------------------------------------------
-// Secret provisioning from the environment
-// ---------------------------------------------------------------------------
 
 /** Master key that encrypts the secret store. Without it, secret-requiring plugins run in auth_error. */
 const MASTER_KEY_ENV = "PB_MASTER_KEY";
@@ -92,10 +84,6 @@ async function provisionFromEnv(
     }
   }
 }
-
-// ---------------------------------------------------------------------------
-// Bootstrap
-// ---------------------------------------------------------------------------
 
 /**
  * Instantiates `PulseBridgeCore`, loads all plugins declared in the config,

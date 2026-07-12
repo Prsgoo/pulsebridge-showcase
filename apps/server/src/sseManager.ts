@@ -1,14 +1,6 @@
 import type { PulseBridgeCore, PulseViewRecord } from "pulsebridge";
 
-// ---------------------------------------------------------------------------
-// Types
-// ---------------------------------------------------------------------------
-
 type SseSender = (event: string, data: unknown) => Promise<void>;
-
-// ---------------------------------------------------------------------------
-// SseManager
-// ---------------------------------------------------------------------------
 
 /**
  * Manages connected SSE clients and broadcasts events to all of them.

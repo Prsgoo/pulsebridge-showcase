@@ -3,10 +3,6 @@ import type { ProcessorPlugin } from "pulsebridge";
 
 type AnyPlugin = IntegrationPlugin | ProcessorPlugin;
 
-// ---------------------------------------------------------------------------
-// Plugin detection
-// ---------------------------------------------------------------------------
-
 function isPluginInstance(value: unknown): value is AnyPlugin {
   if (typeof value !== "object" || value === null) return false;
   const m = (value as Record<string, unknown>)["manifest"];
@@ -16,10 +12,6 @@ function isPluginInstance(value: unknown): value is AnyPlugin {
     typeof manifest["kind"] === "string" && typeof manifest["id"] === "string"
   );
 }
-
-// ---------------------------------------------------------------------------
-// Loader
-// ---------------------------------------------------------------------------
 
 /**
  * Dynamically imports a plugin package and returns all plugin instances it
