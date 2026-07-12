@@ -14,9 +14,9 @@ import { useRecords } from "./useRecords.ts";
 const SERVER_PORT = 3000;
 const STORAGE_KEY = "pb-base";
 
-// Default to the same host the app is served from (so a phone hitting the
-// machine's Tailscale IP targets that IP's server, not the phone itself).
-const DEFAULT_BASE = `${location.protocol}//${location.hostname}:${SERVER_PORT}`;
+const DEFAULT_BASE =
+  import.meta.env.VITE_API_URL ??
+  `${location.protocol}//${location.hostname}:${SERVER_PORT}`;
 
 export function App() {
   const [baseUrl, setBaseUrl] = useState(
