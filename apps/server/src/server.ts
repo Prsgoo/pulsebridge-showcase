@@ -24,17 +24,9 @@ import {
 } from "./pluginInstaller.js";
 import { checkForUpdates } from "./updateChecker.js";
 
-// ---------------------------------------------------------------------------
-// Error shape
-// ---------------------------------------------------------------------------
-
 function err(message: string): { error: { message: string } } {
   return { error: { message } };
 }
-
-// ---------------------------------------------------------------------------
-// lastError redaction
-// ---------------------------------------------------------------------------
 
 // `lastError` is plugin-authored free text surfaced on /health and /plugins.
 // A careless plugin could embed a secret or a long stack trace; cap and collapse
@@ -54,10 +46,6 @@ function redactLastError(state: PluginState): PluginState {
       : collapsed;
   return { ...state, lastError };
 }
-
-// ---------------------------------------------------------------------------
-// Action / webhook error mapping
-// ---------------------------------------------------------------------------
 
 // Maps a thrown plugin error onto an HTTP response for the action/webhook
 // channels. A client fault (PluginInputError) returns the plugin's own message
@@ -85,10 +73,6 @@ function channelErrorResponse(
   }
   return undefined;
 }
-
-// ---------------------------------------------------------------------------
-// App factory
-// ---------------------------------------------------------------------------
 
 // A package spec passed to `npm install`: optional "@scope/", a package name,
 // and an optional "@version|tag|range". This is a strict allowlist — not just a
@@ -172,8 +156,6 @@ export function buildApp(options: BuildAppOptions): Hono {
 
   app.notFound((c) => c.json(err("Not found."), 404));
 
-  // ── Health ────────────────────────────────────────────────────────────────
-
   app.get("/health", (c) => {
     const health = core.getHealth();
     return c.json({
@@ -182,8 +164,6 @@ export function buildApp(options: BuildAppOptions): Hono {
       plugins: health.plugins.map(redactLastError),
     });
   });
-
-  // ── Plugins ───────────────────────────────────────────────────────────────
 
   // Maps each plugin id to its manifest version so the dashboard can show what
   // version of every integration/processor is running.
@@ -210,8 +190,6 @@ export function buildApp(options: BuildAppOptions): Hono {
       }),
     );
   });
-
-  // ── Plugin secrets (write-only) ─────────────────────────────────────────────
 
   // Returns which declared secrets are set/unset — never the values themselves.
   app.get("/plugins/:id/secrets", authGuard, async (c) => {
@@ -262,8 +240,6 @@ export function buildApp(options: BuildAppOptions): Hono {
     return c.json(spec);
   });
 
-  // ── Views ─────────────────────────────────────────────────────────────────
-
   app.get("/views", async (c) => {
     const views = await core.getViews();
     return c.json(views.map((v) => v.view));
@@ -278,8 +254,6 @@ export function buildApp(options: BuildAppOptions): Hono {
     return c.json(view);
   });
 
-  // ── Records ───────────────────────────────────────────────────────────────
-
   app.get("/records", (c) => {
     const types = core
       .listIntegrationManifests()
@@ -293,8 +267,6 @@ export function buildApp(options: BuildAppOptions): Hono {
     const records = await core.getRecordsByType(type);
     return c.json(records);
   });
-
-  // ── Actions (push-out) ──────────────────────────────────────────────────────
 
   // Lists the outbound actions a plugin declares. Public — discovery only,
   // invoking is what requires auth.
@@ -349,8 +321,6 @@ export function buildApp(options: BuildAppOptions): Hono {
     }
   });
 
-  // ── Webhooks (push-in) ──────────────────────────────────────────────────────
-
   // Receives an inbound webhook. Public: external systems can't carry the
   // server's API key, so authentication is the plugin's job — it verifies the
   // sender's signature from the raw body inside ingest(). The raw body is read
@@ -387,8 +357,6 @@ export function buildApp(options: BuildAppOptions): Hono {
       return mapped;
     }
   });
-
-  // ── Plugin install ────────────────────────────────────────────────────────
 
   app.post("/plugins/install", authGuard, async (c) => {
     let body: unknown;
@@ -435,8 +403,6 @@ export function buildApp(options: BuildAppOptions): Hono {
     });
   });
 
-  // ── Plugin uninstall ──────────────────────────────────────────────────────
-
   const uninstallBodySchema = z.object({ package: packageSpecSchema });
 
   app.delete("/plugins", authGuard, async (c) => {
@@ -481,8 +447,6 @@ export function buildApp(options: BuildAppOptions): Hono {
       next: "Call POST /restart to apply changes.",
     });
   });
-
-  // ── Plugin updates ────────────────────────────────────────────────────────
 
   app.get("/plugins/updates", authGuard, async (c) => {
     const updates = await checkForUpdates(configPath, serverRoot);
@@ -550,8 +514,6 @@ export function buildApp(options: BuildAppOptions): Hono {
     });
   });
 
-  // ── Restart ───────────────────────────────────────────────────────────────
-
   app.post("/restart", authGuard, (c) => {
     // Hand off to graceful shutdown once this response is queued. Shutdown
     // drains in-flight work and calls each plugin's destroy(), then exits;
@@ -565,8 +527,6 @@ export function buildApp(options: BuildAppOptions): Hono {
       message: "Restart requested — draining in-flight work and exiting.",
     });
   });
-
-  // ── SSE ───────────────────────────────────────────────────────────────────
 
   app.get("/events", (c) => {
     return streamSSE(c, async (stream) => {
@@ -586,13 +546,11 @@ export function buildApp(options: BuildAppOptions): Hono {
 
       const unsub = sse.subscribe(sender);
 
-      // Announce connection.
       await sender("connected", {
         message: "Connected to PulseBridge event stream.",
         clients: sse.clientCount,
       });
 
-      // Keep-alive ping loop.
       while (alive) {
         await stream.sleep(30_000);
         if (!alive) break;

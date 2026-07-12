@@ -19,10 +19,6 @@ function npmArgs(...args: string[]): [string, string[]] {
 
 const NPM_TIMEOUT_MS = 120_000;
 
-// ---------------------------------------------------------------------------
-// npm install / uninstall
-// ---------------------------------------------------------------------------
-
 export interface InstallResult {
   stdout: string;
   stderr: string;
@@ -69,10 +65,6 @@ export function npmUninstall(
 ): Promise<InstallResult> {
   return runNpm("uninstall", packageName, cwd);
 }
-
-// ---------------------------------------------------------------------------
-// package.json sync
-// ---------------------------------------------------------------------------
 
 const DEP_SECTIONS = ["dependencies", "optionalDependencies"] as const;
 
@@ -167,10 +159,6 @@ export async function removeFromPackageJson(
     return changed;
   });
 }
-
-// ---------------------------------------------------------------------------
-// Config update
-// ---------------------------------------------------------------------------
 
 /**
  * Appends a plugin entry to the `plugins` array in the config file.
