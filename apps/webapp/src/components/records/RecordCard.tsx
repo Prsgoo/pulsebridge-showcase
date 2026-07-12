@@ -52,10 +52,6 @@ function RecordBody({ record }: RecordCardProps) {
   }
 }
 
-// ---------------------------------------------------------------------------
-// Typed bodies
-// ---------------------------------------------------------------------------
-
 function AirQualityBody({ data }: { data: AirQualityData }) {
   return (
     <>
@@ -213,10 +209,6 @@ function MarketQuoteBody({ data }: { data: MarketQuoteData }) {
   );
 }
 
-// ---------------------------------------------------------------------------
-// Fallback — a key/value grid beats a raw JSON dump for unknown record types
-// ---------------------------------------------------------------------------
-
 function GenericBody({ data }: { data: Record<string, unknown> }) {
   const entries = Object.entries(data).slice(0, 8);
   return (
@@ -238,10 +230,6 @@ function toDisplay(value: unknown): string {
   if (typeof value === "object") return JSON.stringify(value);
   return String(value);
 }
-
-// ---------------------------------------------------------------------------
-// Shared
-// ---------------------------------------------------------------------------
 
 type BadgeTone = "red" | "amber" | "blue" | "muted";
 
