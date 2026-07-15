@@ -5,6 +5,7 @@ import type { PulseLogger } from "pulsebridge";
 import { loadConfig } from "./configLoader.js";
 import { bootCore } from "./coreBootstrap.js";
 import { SseManager } from "./sseManager.js";
+import { RuleEngine } from "./ruleEngine.js";
 import { buildApp } from "./server.js";
 import { createAuthGuard } from "./auth.js";
 import { getInstalledVersion } from "./updateChecker.js";
@@ -53,6 +54,9 @@ async function main(): Promise<void> {
 
   const sse = new SseManager();
   sse.attachToCore(core);
+
+  const rules = new RuleEngine();
+  rules.attach(config.rules, core, sse, logger);
 
   // Assigned once serve() is called below; shutdown() is only ever invoked
   // after the server is listening, so the reference is always set by then.
