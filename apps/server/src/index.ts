@@ -7,6 +7,8 @@ import { bootCore } from "./coreBootstrap.js";
 import { SseManager } from "./sseManager.js";
 import { RuleEngine } from "./ruleEngine.js";
 import { buildApp } from "./server.js";
+import { createAuthGuard } from "./auth.js";
+import { getInstalledVersion } from "./updateChecker.js";
 
 function buildSeismicPayload(item: unknown): {
   title: string;
@@ -33,8 +35,6 @@ function buildSeismicPayload(item: unknown): {
     tags: ["earthquake"],
   };
 }
-import { createAuthGuard } from "./auth.js";
-import { getInstalledVersion } from "./updateChecker.js";
 
 function ts(): string {
   return new Date().toLocaleTimeString("en-GB", {
