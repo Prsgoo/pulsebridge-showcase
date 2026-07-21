@@ -25,6 +25,7 @@
     "@prsgoo/integration-gdelt-news": "^0.1.0",
     "@prsgoo/integration-nasa-apod": "^0.1.0",
     "@prsgoo/integration-nasa-donki": "^0.1.0",
+    "@prsgoo/integration-ntfy": "^0.1.1-beta.1",
     "@prsgoo/integration-nvd-cve": "^0.1.0",
     "@prsgoo/integration-open-elevation": "^0.1.0",
     "@prsgoo/integration-openaq-air": "^0.1.0",
