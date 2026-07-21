@@ -114,6 +114,21 @@
     {
       "package": "@prsgoo/integration-open-elevation",
       "config": {}
+    },
+    {
+      "package": "@prsgoo/integration-ntfy",
+      "config": {
+        "topic": "pulsebridge-alerts"
+      }
+    }
+  ],
+  "rules": [
+    {
+      "id": "quake-significant-ntfy",
+      "on": "seismic-feed",
+      "when": "significant-quake",
+      "do": "notify-ntfy",
+      "dedupeBy": "id"
     }
   ]
 }
