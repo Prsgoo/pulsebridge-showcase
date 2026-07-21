@@ -7,6 +7,32 @@ import { bootCore } from "./coreBootstrap.js";
 import { SseManager } from "./sseManager.js";
 import { RuleEngine } from "./ruleEngine.js";
 import { buildApp } from "./server.js";
+
+function buildSeismicPayload(item: unknown): {
+  title: string;
+  message: string;
+  priority: "high" | "normal";
+  tags: string[];
+} {
+  const ev = item as {
+    magnitude: number;
+    place: string;
+    depth: number;
+    significance: number;
+    tsunami: boolean;
+    alert: "green" | "yellow" | "orange" | "red" | null;
+  };
+  const priority =
+    ev.alert === "red" || ev.alert === "orange" ? "high" : "normal";
+  const parts = [`Depth: ${ev.depth}km`, `Sig: ${ev.significance}`];
+  if (ev.tsunami) parts.push("Tsunami warning");
+  return {
+    title: `M${ev.magnitude.toFixed(1)} - ${ev.place}`,
+    message: parts.join(" | "),
+    priority,
+    tags: ["earthquake"],
+  };
+}
 import { createAuthGuard } from "./auth.js";
 import { getInstalledVersion } from "./updateChecker.js";
 
@@ -56,6 +82,21 @@ async function main(): Promise<void> {
   sse.attachToCore(core);
 
   const rules = new RuleEngine();
+
+  rules.registerPredicate("significant-quake", (item) => {
+    if (typeof item !== "object" || item === null) return false;
+    const ev = item as { magnitude?: unknown };
+    return typeof ev.magnitude === "number" && ev.magnitude >= 6.0;
+  });
+
+  rules.registerEffect("notify-ntfy", async (item, core) => {
+    await core.invokeAction(
+      "@prsgoo/integration-ntfy",
+      "send",
+      buildSeismicPayload(item),
+    );
+  });
+
   rules.attach(config.rules, core, sse, logger);
 
   // Assigned once serve() is called below; shutdown() is only ever invoked

@@ -28,6 +28,10 @@ function post(app: Hono, headers: Record<string, string> = {}) {
   return app.request("/guarded", { method: "POST", headers }, CLIENT_ENV);
 }
 
+beforeEach(() => {
+  delete process.env["PULSEBRIDGE_API_KEY"];
+});
+
 afterEach(() => {
   delete process.env["PULSEBRIDGE_API_KEY"];
   vi.clearAllMocks();
