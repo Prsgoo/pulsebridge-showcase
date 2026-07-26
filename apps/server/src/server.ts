@@ -251,7 +251,12 @@ export function buildApp(options: BuildAppOptions): Hono {
     if (!view) {
       return c.json(err(`View "${id}" not found.`), 404);
     }
-    return c.json(view);
+    const limitParam = c.req.query("limit");
+    const limit = limitParam ? parseInt(limitParam, 10) : 500;
+    const items = Number.isFinite(limit) && limit > 0 && view.items.length > limit
+      ? view.items.slice(0, limit)
+      : view.items;
+    return c.json({ ...view, items });
   });
 
   app.get("/records", (c) => {

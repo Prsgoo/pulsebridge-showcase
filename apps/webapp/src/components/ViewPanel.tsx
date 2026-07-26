@@ -70,7 +70,7 @@ function renderItems(items: unknown[]) {
   }
 
   return (
-    <pre className="m-0 max-h-80 overflow-auto rounded-lg border border-edge bg-panel-2 p-3 text-xs">
+    <pre className="m-0 max-h-80 overflow-auto whitespace-pre-wrap break-all rounded-lg border border-edge bg-panel-2 p-3 text-xs">
       {JSON.stringify(items, null, 2)}
     </pre>
   );

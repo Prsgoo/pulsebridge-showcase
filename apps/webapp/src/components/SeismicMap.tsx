@@ -1,4 +1,5 @@
-import { CircleMarker, MapContainer, Popup, TileLayer } from "react-leaflet";
+import { useEffect } from "react";
+import { CircleMarker, MapContainer, Popup, TileLayer, useMap } from "react-leaflet";
 
 import "leaflet/dist/leaflet.css";
 
@@ -23,6 +24,14 @@ interface SeismicMapProps {
   items: SeismicItem[];
 }
 
+function MapResizer() {
+  const map = useMap();
+  useEffect(() => {
+    map.invalidateSize();
+  }, [map]);
+  return null;
+}
+
 export function SeismicMap({ items }: SeismicMapProps) {
   return (
     <div className="overflow-hidden rounded-xl border border-edge">
@@ -32,6 +41,7 @@ export function SeismicMap({ items }: SeismicMapProps) {
         scrollWheelZoom
         style={{ height: MAP_HEIGHT, width: "100%", background: "#0b1220" }}
       >
+        <MapResizer />
         <TileLayer
           attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
           url="https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png"

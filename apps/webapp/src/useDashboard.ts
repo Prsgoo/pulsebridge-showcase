@@ -17,6 +17,8 @@ export interface DashboardState {
   coreVersion: string | null;
   connection: ConnectionState;
   reachable: boolean;
+  lastRefreshed: string | null;
+  refresh: () => void;
 }
 
 export function useDashboard(baseUrl: string): DashboardState {
@@ -28,6 +30,7 @@ export function useDashboard(baseUrl: string): DashboardState {
   const [coreVersion, setCoreVersion] = useState<string | null>(null);
   const [connection, setConnection] = useState<ConnectionState>("connecting");
   const [reachable, setReachable] = useState(true);
+  const [lastRefreshed, setLastRefreshed] = useState<string | null>(null);
 
   const refreshPlugins = useCallback(async () => {
     try {
@@ -64,10 +67,14 @@ export function useDashboard(baseUrl: string): DashboardState {
   }, [client]);
 
   const refreshAll = useCallback(() => {
-    void refreshHealth();
-    void refreshPlugins();
-    void refreshViews();
-    void refreshRecords();
+    void Promise.allSettled([
+      refreshHealth(),
+      refreshPlugins(),
+      refreshViews(),
+      refreshRecords(),
+    ]).then(() => {
+      setLastRefreshed(new Date().toISOString());
+    });
   }, [refreshHealth, refreshPlugins, refreshViews, refreshRecords]);
 
   const refreshAllRef = useRef(refreshAll);
@@ -95,5 +102,5 @@ export function useDashboard(baseUrl: string): DashboardState {
     };
   }, [client, refreshAll, refreshPlugins, refreshViews, refreshRecords]);
 
-  return { plugins, views, records, coreVersion, connection, reachable };
+  return { plugins, views, records, coreVersion, connection, reachable, lastRefreshed, refresh: refreshAll };
 }
