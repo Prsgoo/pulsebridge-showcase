@@ -3,9 +3,10 @@ import {
   PluginKinds,
   createRedisClient,
   RedisRecordStore,
-  RedisViewStore,
   RedisStateStore,
   RedisSecretBackend,
+  InMemoryRecordStore,
+  InMemoryViewStore,
   type PulseLogger,
   type IntegrationPlugin,
   type ProcessorPlugin,
@@ -101,7 +102,6 @@ export async function bootCore(
   let redisStores:
     | {
         recordStore: RedisRecordStore;
-        viewStore: RedisViewStore;
         stateStore: RedisStateStore;
         secretBackend: RedisSecretBackend;
       }
@@ -109,12 +109,19 @@ export async function bootCore(
 
   if (config.redis) {
     logger.info("Connecting to Redis…", { url: config.redis.url });
-    const redis = await createRedisClient({ url: config.redis.url });
+    const redisOpts = { url: config.redis.url, commandTimeout: 2000 };
+    const [recordRedis, stateRedis, secretRedis] = await Promise.all([
+      createRedisClient(redisOpts),
+      createRedisClient(redisOpts),
+      createRedisClient(redisOpts),
+    ]);
     redisStores = {
-      recordStore: new RedisRecordStore({ client: redis }),
-      viewStore: new RedisViewStore({ client: redis }),
-      stateStore: new RedisStateStore({ client: redis }),
-      secretBackend: new RedisSecretBackend({ client: redis }),
+      recordStore: new RedisRecordStore({
+        client: recordRedis,
+        fallback: new InMemoryRecordStore(),
+      }),
+      stateStore: new RedisStateStore({ client: stateRedis }),
+      secretBackend: new RedisSecretBackend({ client: secretRedis }),
     };
     logger.info("Redis stores ready.");
   }
@@ -133,7 +140,7 @@ export async function bootCore(
       ? {
           store: {
             records: redisStores.recordStore,
-            views: redisStores.viewStore,
+            views: new InMemoryViewStore(),
           },
           stateStore: redisStores.stateStore,
           secretBackend: redisStores.secretBackend,

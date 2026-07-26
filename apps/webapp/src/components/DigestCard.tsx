@@ -17,12 +17,14 @@ export function DigestCard({ item }: DigestCardProps) {
     <div className="grid gap-4 md:grid-cols-2">
       <article className="overflow-hidden rounded-xl border border-edge bg-panel md:row-span-2">
         {spaceOfTheDay.imageUrl && imageOk && (
-          <img
-            src={spaceOfTheDay.imageUrl}
-            alt={spaceOfTheDay.title}
-            className="aspect-video w-full object-cover"
-            onError={() => setImageOk(false)}
-          />
+          <div className="aspect-video w-full overflow-hidden">
+            <img
+              src={spaceOfTheDay.imageUrl}
+              alt={spaceOfTheDay.title}
+              className="h-full w-full object-cover"
+              onError={() => setImageOk(false)}
+            />
+          </div>
         )}
         <div className="p-4">
           <div className="text-[10px] uppercase tracking-wider text-muted">
