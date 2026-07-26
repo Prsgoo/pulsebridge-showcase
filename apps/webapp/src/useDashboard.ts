@@ -88,8 +88,33 @@ export function useDashboard(baseUrl: string): DashboardState {
     source.addEventListener("connected", () => setConnection("live"));
     source.onopen = () => setConnection("live");
     source.onerror = () => setConnection("down");
-    source.addEventListener("view:updated", () => {
-      void refreshViews();
+    source.addEventListener("view:updated", (e) => {
+      const data = JSON.parse((e as MessageEvent).data) as {
+        viewId: string;
+        generatedAt: string;
+        items: unknown[];
+      };
+      setViews((prev) => {
+        const exists = prev.some((v) => v.view === data.viewId);
+        if (exists)
+          return prev.map((v) =>
+            v.view === data.viewId
+              ? {
+                  view: data.viewId,
+                  generatedAt: data.generatedAt,
+                  items: data.items,
+                }
+              : v,
+          );
+        return [
+          ...prev,
+          {
+            view: data.viewId,
+            generatedAt: data.generatedAt,
+            items: data.items,
+          },
+        ];
+      });
       void refreshRecords();
     });
     source.addEventListener("plugin:status-changed", () => {
