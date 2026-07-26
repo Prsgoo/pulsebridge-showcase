@@ -253,9 +253,10 @@ export function buildApp(options: BuildAppOptions): Hono {
     }
     const limitParam = c.req.query("limit");
     const limit = limitParam ? parseInt(limitParam, 10) : 500;
-    const items = Number.isFinite(limit) && limit > 0 && view.items.length > limit
-      ? view.items.slice(0, limit)
-      : view.items;
+    const items =
+      Number.isFinite(limit) && limit > 0 && view.items.length > limit
+        ? view.items.slice(0, limit)
+        : view.items;
     return c.json({ ...view, items });
   });
 

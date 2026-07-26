@@ -116,7 +116,10 @@ export async function bootCore(
       createRedisClient(redisOpts),
     ]);
     redisStores = {
-      recordStore: new RedisRecordStore({ client: recordRedis, fallback: new InMemoryRecordStore() }),
+      recordStore: new RedisRecordStore({
+        client: recordRedis,
+        fallback: new InMemoryRecordStore(),
+      }),
       stateStore: new RedisStateStore({ client: stateRedis }),
       secretBackend: new RedisSecretBackend({ client: secretRedis }),
     };

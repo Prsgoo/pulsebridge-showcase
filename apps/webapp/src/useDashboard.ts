@@ -102,5 +102,14 @@ export function useDashboard(baseUrl: string): DashboardState {
     };
   }, [client, refreshAll, refreshPlugins, refreshViews, refreshRecords]);
 
-  return { plugins, views, records, coreVersion, connection, reachable, lastRefreshed, refresh: refreshAll };
+  return {
+    plugins,
+    views,
+    records,
+    coreVersion,
+    connection,
+    reachable,
+    lastRefreshed,
+    refresh: refreshAll,
+  };
 }

@@ -71,7 +71,8 @@ export function PluginList({ plugins }: PluginListProps) {
           <div className="mt-2 text-xs text-muted">
             ran {formatRelativeTime(plugin.lastRunAt)}
           </div>
-          {plugin.status !== "enabled" && plugin.status !== "disabled" &&
+          {plugin.status !== "enabled" &&
+            plugin.status !== "disabled" &&
             plugin.lastError && (
               <div className="mt-1.5 break-words text-xs text-red-400">
                 {plugin.lastError}

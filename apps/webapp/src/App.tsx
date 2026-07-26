@@ -23,8 +23,16 @@ export function App() {
     () => localStorage.getItem(STORAGE_KEY) ?? DEFAULT_BASE,
   );
 
-  const { plugins, views, records, coreVersion, connection, reachable, lastRefreshed, refresh } =
-    useDashboard(baseUrl);
+  const {
+    plugins,
+    views,
+    records,
+    coreVersion,
+    connection,
+    reachable,
+    lastRefreshed,
+    refresh,
+  } = useDashboard(baseUrl);
   const anomalies = useRecords<InternetAnomalyData>(
     baseUrl,
     "internet.anomaly",
