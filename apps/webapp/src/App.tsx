@@ -6,6 +6,7 @@ import { PulseBridgeClient } from "./api.ts";
 import { Header } from "./components/Header.tsx";
 import { InternetAnomalies } from "./components/InternetAnomalies.tsx";
 import { MarketQuotes } from "./components/MarketQuotes.tsx";
+import { GlobeView } from "./components/GlobeView.tsx";
 import { PluginList, PluginStatusSummary } from "./components/PluginList.tsx";
 import { SourceHealthPanel } from "./components/SourceHealthPanel.tsx";
 import { RecordCounts } from "./components/RecordCounts.tsx";
@@ -98,6 +99,10 @@ export function App() {
             <MarketQuotes records={quotes} />
           </Section>
         )}
+
+        <Section title="World Overview" collapsible defaultOpen={true}>
+          <GlobeView views={views} />
+        </Section>
 
         <Section title="Views">
           {views.length === 0 ? (
