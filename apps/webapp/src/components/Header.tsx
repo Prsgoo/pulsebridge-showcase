@@ -20,8 +20,10 @@ interface HeaderProps {
   connection: ConnectionState;
   coreVersion: string | null;
   lastRefreshed: string | null;
+  theme: "dark" | "light";
   onBaseUrlChange: (url: string) => void;
   onRefresh: () => void;
+  onThemeToggle: () => void;
 }
 
 export function Header({
@@ -29,8 +31,10 @@ export function Header({
   connection,
   coreVersion,
   lastRefreshed,
+  theme,
   onBaseUrlChange,
   onRefresh,
+  onThemeToggle,
 }: HeaderProps) {
   const [draft, setDraft] = useState(baseUrl);
 
@@ -69,6 +73,15 @@ export function Header({
           title="Refresh now"
         >
           ↻
+        </button>
+        <button
+          onClick={onThemeToggle}
+          className="rounded-md border border-edge bg-panel-2 px-2 py-1 text-xs text-ink hover:border-blue-500 hover:text-blue-400 active:opacity-70"
+          title={
+            theme === "dark" ? "Switch to light mode" : "Switch to dark mode"
+          }
+        >
+          {theme === "dark" ? "☀" : "☾"}
         </button>
       </div>
 
