@@ -25,7 +25,7 @@ export class PulseBridgeClient {
   async getViews(): Promise<ViewSnapshot[]> {
     const ids = await this.getJson<string[]>("/views");
     return Promise.all(
-      ids.map((id) => this.getJson<ViewSnapshot>(`/views/${id}`)),
+      ids.map((id) => this.getJson<ViewSnapshot>(`/views/${id}?limit=200`)),
     );
   }
 

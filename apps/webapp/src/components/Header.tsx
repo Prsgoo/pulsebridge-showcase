@@ -1,6 +1,7 @@
 import { useState } from "react";
 
 import type { ConnectionState } from "../types.ts";
+import { formatRelativeTime } from "../lib/format.ts";
 
 const DOT_STYLES: Record<ConnectionState, string> = {
   connecting: "bg-muted",
@@ -18,14 +19,18 @@ interface HeaderProps {
   baseUrl: string;
   connection: ConnectionState;
   coreVersion: string | null;
+  lastRefreshed: string | null;
   onBaseUrlChange: (url: string) => void;
+  onRefresh: () => void;
 }
 
 export function Header({
   baseUrl,
   connection,
   coreVersion,
+  lastRefreshed,
   onBaseUrlChange,
+  onRefresh,
 }: HeaderProps) {
   const [draft, setDraft] = useState(baseUrl);
 
@@ -52,6 +57,19 @@ export function Header({
           className={`h-2.5 w-2.5 rounded-full ${DOT_STYLES[connection]}`}
         />
         <span>{DOT_LABELS[connection]}</span>
+      </div>
+
+      <div className="flex items-center gap-2 text-sm text-muted">
+        {lastRefreshed && (
+          <span>checked {formatRelativeTime(lastRefreshed)}</span>
+        )}
+        <button
+          onClick={onRefresh}
+          className="rounded-md border border-edge bg-panel-2 px-2 py-1 text-xs text-ink hover:border-blue-500 hover:text-blue-400 active:opacity-70"
+          title="Refresh now"
+        >
+          ↻
+        </button>
       </div>
 
       <div className="hidden flex-1 sm:block" />
