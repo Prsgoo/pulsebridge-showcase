@@ -295,6 +295,24 @@ export function isWildfireFeedItem(value: unknown): value is WildfireFeedItem {
   );
 }
 
+export interface SecretSpec {
+  key: string;
+  required: boolean;
+  isSet: boolean;
+}
+
+export interface ProvisioningSpec {
+  pluginId: string;
+  secrets: SecretSpec[];
+}
+
+export interface UpdateInfo {
+  package: string;
+  current: string;
+  latest: string;
+  hasUpdate: boolean;
+}
+
 export function isFlightFeedItem(value: unknown): value is FlightFeedItem {
   return (
     typeof value === "object" &&
