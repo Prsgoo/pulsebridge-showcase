@@ -1,13 +1,8 @@
-import { useEffect } from "react";
-import {
-  CircleMarker,
-  MapContainer,
-  Popup,
-  TileLayer,
-  useMap,
-} from "react-leaflet";
+import { CircleMarker, MapContainer, Popup, TileLayer } from "react-leaflet";
 
 import "leaflet/dist/leaflet.css";
+
+import { MapResizer } from "../lib/MapResizer.tsx";
 
 import type { SeismicAlert, SeismicItem } from "../types.ts";
 
@@ -28,14 +23,6 @@ const RADIUS_PER_MAGNITUDE = 2.6;
 
 interface SeismicMapProps {
   items: SeismicItem[];
-}
-
-function MapResizer() {
-  const map = useMap();
-  useEffect(() => {
-    map.invalidateSize();
-  }, [map]);
-  return null;
 }
 
 export function SeismicMap({ items }: SeismicMapProps) {
