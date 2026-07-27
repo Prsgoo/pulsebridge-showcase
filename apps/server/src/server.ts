@@ -180,12 +180,18 @@ export function buildApp(options: BuildAppOptions): Hono {
 
   app.get("/plugins", (c) => {
     const versions = pluginVersionsById();
+    const integrationIds = new Set(
+      core.listIntegrationManifests().map((m) => m.id),
+    );
     return c.json(
       core.listPluginStates().map((state) => {
         const version = versions.get(state.pluginId);
         return {
           ...redactLastError(state),
           ...(version !== undefined ? { version } : {}),
+          kind: integrationIds.has(state.pluginId)
+            ? "integration"
+            : "processor",
         };
       }),
     );
