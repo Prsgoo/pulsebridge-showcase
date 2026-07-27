@@ -51,7 +51,7 @@ export function GlobeView({ views }: GlobeViewProps) {
   );
   const containerRef = useRef<HTMLDivElement>(null);
   const [width, setWidth] = useState(800);
-  const globeRef = useRef<GlobeMethods>(undefined!);
+  const globeRef = useRef<GlobeMethods | undefined>(undefined);
 
   useEffect(() => {
     const el = containerRef.current;
