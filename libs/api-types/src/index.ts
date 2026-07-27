@@ -11,6 +11,7 @@ export interface PluginInfo {
   version?: string;
   lastRunAt?: string;
   lastError?: string;
+  kind?: "integration" | "processor";
 }
 
 export interface HealthInfo {
