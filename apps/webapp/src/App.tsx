@@ -1,11 +1,13 @@
 import { useCallback, useMemo, useState } from "react";
 
+import { useAuth } from "./useAuth.ts";
 import { useTheme } from "./lib/useTheme.ts";
 
 import { PulseBridgeClient } from "./api.ts";
 import { Header } from "./components/Header.tsx";
 import { InternetAnomalies } from "./components/InternetAnomalies.tsx";
 import { MarketQuotes } from "./components/MarketQuotes.tsx";
+import { AdminPanel } from "./components/admin/AdminPanel.tsx";
 import { GlobeView } from "./components/GlobeView.tsx";
 import { PluginList, PluginStatusSummary } from "./components/PluginList.tsx";
 import { SourceHealthPanel } from "./components/SourceHealthPanel.tsx";
@@ -27,6 +29,7 @@ export function App() {
     () => localStorage.getItem(STORAGE_KEY) ?? DEFAULT_BASE,
   );
   const [theme, toggleTheme] = useTheme();
+  const { apiKey, setApiKey } = useAuth();
 
   const {
     plugins,
@@ -120,6 +123,15 @@ export function App() {
 
         <Section title="Records">
           <RecordCounts records={records} onSelect={fetchRecords} />
+        </Section>
+
+        <Section title="Admin" collapsible defaultOpen={false}>
+          <AdminPanel
+            client={client}
+            plugins={plugins}
+            apiKey={apiKey}
+            onApiKeyChange={setApiKey}
+          />
         </Section>
       </main>
     </>
