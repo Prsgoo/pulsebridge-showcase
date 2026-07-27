@@ -12,15 +12,13 @@ export function MarketQuotes({ records }: MarketQuotesProps) {
 
   return (
     <div className="overflow-hidden rounded-xl border border-edge bg-panel">
-      <div className="overflow-x-auto">
-        {quotes.map((record, index) => (
-          <QuoteRow
-            key={record.entityKey}
-            data={record.data}
-            divider={index > 0}
-          />
-        ))}
-      </div>
+      {quotes.map((record, index) => (
+        <QuoteRow
+          key={record.entityKey}
+          data={record.data}
+          divider={index > 0}
+        />
+      ))}
     </div>
   );
 }
@@ -41,7 +39,7 @@ function QuoteRow({
 
   return (
     <div
-      className={`grid min-w-[26rem] grid-cols-[4rem_5.5rem_1fr_5rem] items-center gap-3 px-4 py-2.5 ${
+      className={`grid grid-cols-[4rem_5.5rem_1fr_5rem] items-center gap-3 px-4 py-2.5 ${
         divider ? "border-t border-edge" : ""
       }`}
     >

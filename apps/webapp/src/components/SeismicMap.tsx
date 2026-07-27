@@ -2,8 +2,6 @@ import { CircleMarker, MapContainer, Popup, TileLayer } from "react-leaflet";
 
 import "leaflet/dist/leaflet.css";
 
-import { MapResizer } from "../lib/MapResizer.tsx";
-
 import type { SeismicAlert, SeismicItem } from "../types.ts";
 
 // PAGER alert colors, with a neutral slate for events that carry no alert.
@@ -34,7 +32,6 @@ export function SeismicMap({ items }: SeismicMapProps) {
         scrollWheelZoom
         style={{ height: MAP_HEIGHT, width: "100%", background: "#0b1220" }}
       >
-        <MapResizer />
         <TileLayer
           attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
           url="https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png"
