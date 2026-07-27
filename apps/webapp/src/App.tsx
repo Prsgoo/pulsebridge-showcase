@@ -7,6 +7,7 @@ import { Header } from "./components/Header.tsx";
 import { InternetAnomalies } from "./components/InternetAnomalies.tsx";
 import { MarketQuotes } from "./components/MarketQuotes.tsx";
 import { PluginList, PluginStatusSummary } from "./components/PluginList.tsx";
+import { SourceHealthPanel } from "./components/SourceHealthPanel.tsx";
 import { RecordCounts } from "./components/RecordCounts.tsx";
 import { ViewPanel } from "./components/ViewPanel.tsx";
 import type { InternetAnomalyData, MarketQuoteData } from "./types.ts";
@@ -73,10 +74,14 @@ export function App() {
           </p>
         )}
 
+        <Section title="Data Sources" collapsible defaultOpen={true}>
+          <SourceHealthPanel plugins={plugins} />
+        </Section>
+
         <Section
           title="Plugins"
           collapsible
-          defaultOpen={true}
+          defaultOpen={false}
           summary={<PluginStatusSummary plugins={plugins} />}
         >
           <PluginList plugins={plugins} />
