@@ -23,16 +23,8 @@ export function App() {
     () => localStorage.getItem(STORAGE_KEY) ?? DEFAULT_BASE,
   );
 
-  const {
-    plugins,
-    views,
-    records,
-    coreVersion,
-    connection,
-    reachable,
-    lastRefreshed,
-    refresh,
-  } = useDashboard(baseUrl);
+  const { plugins, views, records, coreVersion, connection, reachable } =
+    useDashboard(baseUrl);
   const anomalies = useRecords<InternetAnomalyData>(
     baseUrl,
     "internet.anomaly",
@@ -56,9 +48,7 @@ export function App() {
         baseUrl={baseUrl}
         connection={connection}
         coreVersion={coreVersion}
-        lastRefreshed={lastRefreshed}
         onBaseUrlChange={updateBaseUrl}
-        onRefresh={refresh}
       />
 
       <main className="mx-auto grid max-w-[1200px] gap-6 p-4 sm:gap-8 sm:p-6">
@@ -71,7 +61,7 @@ export function App() {
         <Section
           title="Plugins"
           collapsible
-          defaultOpen={true}
+          defaultOpen={false}
           summary={<PluginStatusSummary plugins={plugins} />}
         >
           <PluginList plugins={plugins} />

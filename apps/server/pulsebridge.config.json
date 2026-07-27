@@ -120,62 +120,6 @@
       "config": {
         "topic": "pulsebridge-alerts"
       }
-    },
-    {
-      "package": "@prsgoo/integration-opensky",
-      "config": {
-        "boundingBox": {
-          "minLat": 50.5,
-          "maxLat": 52.5,
-          "minLon": -1.5,
-          "maxLon": 1.5
-        }
-      },
-      "pollIntervalMs": 30000
-    },
-    {
-      "package": "@prsgoo/integration-adsbfi",
-      "config": { "lat": 51.5, "lon": -0.12, "dist": 250 },
-      "pollIntervalMs": 30000
-    },
-    {
-      "package": "@prsgoo/integration-airplaneslive",
-      "config": { "lat": 51.5, "lon": -0.12, "radius": 250 },
-      "pollIntervalMs": 30000
-    },
-    {
-      "package": "@prsgoo/processor-flight-feed"
-    },
-    {
-      "package": "@prsgoo/integration-rss",
-      "config": {
-        "feeds": [
-          {
-            "url": "https://feeds.bbci.co.uk/news/rss.xml",
-            "name": "BBC News"
-          },
-          {
-            "url": "https://www.theguardian.com/world/rss",
-            "name": "The Guardian"
-          },
-          { "url": "https://news.ycombinator.com/rss", "name": "Hacker News" }
-        ]
-      },
-      "pollIntervalMs": 900000
-    },
-    {
-      "package": "@prsgoo/integration-nasa-firms",
-      "config": {
-        "dayRange": 1,
-        "source": "VIIRS_SNPP_NRT"
-      },
-      "pollIntervalMs": 3600000
-    },
-    {
-      "package": "@prsgoo/processor-news-feed"
-    },
-    {
-      "package": "@prsgoo/processor-wildfire-feed"
     }
   ],
   "rules": [

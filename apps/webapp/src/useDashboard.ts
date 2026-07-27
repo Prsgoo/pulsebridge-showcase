@@ -17,8 +17,6 @@ export interface DashboardState {
   coreVersion: string | null;
   connection: ConnectionState;
   reachable: boolean;
-  lastRefreshed: string | null;
-  refresh: () => void;
 }
 
 export function useDashboard(baseUrl: string): DashboardState {
@@ -30,7 +28,6 @@ export function useDashboard(baseUrl: string): DashboardState {
   const [coreVersion, setCoreVersion] = useState<string | null>(null);
   const [connection, setConnection] = useState<ConnectionState>("connecting");
   const [reachable, setReachable] = useState(true);
-  const [lastRefreshed, setLastRefreshed] = useState<string | null>(null);
 
   const refreshPlugins = useCallback(async () => {
     try {
@@ -67,14 +64,10 @@ export function useDashboard(baseUrl: string): DashboardState {
   }, [client]);
 
   const refreshAll = useCallback(() => {
-    void Promise.allSettled([
-      refreshHealth(),
-      refreshPlugins(),
-      refreshViews(),
-      refreshRecords(),
-    ]).then(() => {
-      setLastRefreshed(new Date().toISOString());
-    });
+    void refreshHealth();
+    void refreshPlugins();
+    void refreshViews();
+    void refreshRecords();
   }, [refreshHealth, refreshPlugins, refreshViews, refreshRecords]);
 
   const refreshAllRef = useRef(refreshAll);
@@ -88,33 +81,8 @@ export function useDashboard(baseUrl: string): DashboardState {
     source.addEventListener("connected", () => setConnection("live"));
     source.onopen = () => setConnection("live");
     source.onerror = () => setConnection("down");
-    source.addEventListener("view:updated", (e) => {
-      const data = JSON.parse((e as MessageEvent).data) as {
-        viewId: string;
-        generatedAt: string;
-        items: unknown[];
-      };
-      setViews((prev) => {
-        const exists = prev.some((v) => v.view === data.viewId);
-        if (exists)
-          return prev.map((v) =>
-            v.view === data.viewId
-              ? {
-                  view: data.viewId,
-                  generatedAt: data.generatedAt,
-                  items: data.items,
-                }
-              : v,
-          );
-        return [
-          ...prev,
-          {
-            view: data.viewId,
-            generatedAt: data.generatedAt,
-            items: data.items,
-          },
-        ];
-      });
+    source.addEventListener("view:updated", () => {
+      void refreshViews();
       void refreshRecords();
     });
     source.addEventListener("plugin:status-changed", () => {
@@ -127,14 +95,5 @@ export function useDashboard(baseUrl: string): DashboardState {
     };
   }, [client, refreshAll, refreshPlugins, refreshViews, refreshRecords]);
 
-  return {
-    plugins,
-    views,
-    records,
-    coreVersion,
-    connection,
-    reachable,
-    lastRefreshed,
-    refresh: refreshAll,
-  };
+  return { plugins, views, records, coreVersion, connection, reachable };
 }

@@ -9,7 +9,6 @@ import { RuleEngine } from "./ruleEngine.js";
 import { buildApp } from "./server.js";
 import { createAuthGuard } from "./auth.js";
 import { getInstalledVersion } from "./updateChecker.js";
-import { startStatusExporter } from "./statusExporter.js";
 
 function buildSeismicPayload(item: unknown): {
   title: string;
@@ -79,8 +78,6 @@ async function main(): Promise<void> {
 
   const { core } = await bootCore(config, logger);
 
-  const stopExporter = startStatusExporter(core, logger, serverRoot);
-
   const sse = new SseManager();
   sse.attachToCore(core);
 
@@ -113,7 +110,6 @@ async function main(): Promise<void> {
     if (shuttingDown) return;
     shuttingDown = true;
     logger.info(`Shutting down… (${reason})`);
-    stopExporter();
     server?.close();
     await core.stop();
     logger.info("Stopped.");

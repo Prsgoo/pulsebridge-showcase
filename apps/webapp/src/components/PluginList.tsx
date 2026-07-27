@@ -50,6 +50,7 @@ export function PluginList({ plugins }: PluginListProps) {
         <div
           key={plugin.pluginId}
           className="rounded-xl border border-edge bg-panel p-4"
+          title={plugin.lastError ?? undefined}
         >
           <div className="flex items-center justify-between gap-2">
             <span className="flex min-w-0 items-baseline gap-1.5">
@@ -70,14 +71,8 @@ export function PluginList({ plugins }: PluginListProps) {
           </div>
           <div className="mt-2 text-xs text-muted">
             ran {formatRelativeTime(plugin.lastRunAt)}
+            {plugin.lastError ? ` · ${plugin.lastError}` : ""}
           </div>
-          {plugin.status !== "enabled" &&
-            plugin.status !== "disabled" &&
-            plugin.lastError && (
-              <div className="mt-1.5 break-words text-xs text-red-400">
-                {plugin.lastError}
-              </div>
-            )}
         </div>
       ))}
     </div>

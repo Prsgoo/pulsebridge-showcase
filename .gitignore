@@ -9,7 +9,3 @@ coverage/
 .npmrc
 *.local
 .vite/
-*.log
-apps/server/logs/
-apps/server/chk.cjs
-apps/server/server-run.log

@@ -1,20 +1,14 @@
 import type { ViewSnapshot } from "../types.ts";
 import {
   isDigestItem,
-  isFlightFeedItem,
-  isNewsFeedItem,
   isSeismicItem,
   isTickerItem,
   isWeatherItem,
-  isWildfireFeedItem,
 } from "../types.ts";
 import { DigestCard } from "./DigestCard.tsx";
-import { FlightMap } from "./FlightMap.tsx";
-import { NewsFeedPanel } from "./NewsFeedPanel.tsx";
 import { SeismicMap } from "./SeismicMap.tsx";
 import { TickerCard } from "./TickerCard.tsx";
 import { WeatherCard } from "./WeatherCard.tsx";
-import { WildfireMap } from "./WildfireMap.tsx";
 
 interface ViewPanelProps {
   view: ViewSnapshot;
@@ -65,18 +59,6 @@ function renderItems(items: unknown[]) {
     return <SeismicMap items={items} />;
   }
 
-  if (items.every(isNewsFeedItem)) {
-    return <NewsFeedPanel items={items} />;
-  }
-
-  if (items.every(isWildfireFeedItem)) {
-    return <WildfireMap items={items} />;
-  }
-
-  if (items.every(isFlightFeedItem)) {
-    return <FlightMap items={items} />;
-  }
-
   if (items.every(isDigestItem)) {
     return (
       <div className="grid gap-4">
@@ -88,7 +70,7 @@ function renderItems(items: unknown[]) {
   }
 
   return (
-    <pre className="m-0 max-h-80 overflow-auto whitespace-pre-wrap break-all rounded-lg border border-edge bg-panel-2 p-3 text-xs">
+    <pre className="m-0 max-h-80 overflow-auto rounded-lg border border-edge bg-panel-2 p-3 text-xs">
       {JSON.stringify(items, null, 2)}
     </pre>
   );
