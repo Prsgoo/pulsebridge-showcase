@@ -1,10 +1,16 @@
 import { useCallback, useMemo, useState } from "react";
 
+import { useAuth } from "./useAuth.ts";
+import { useTheme } from "./lib/useTheme.ts";
+
 import { PulseBridgeClient } from "./api.ts";
 import { Header } from "./components/Header.tsx";
 import { InternetAnomalies } from "./components/InternetAnomalies.tsx";
 import { MarketQuotes } from "./components/MarketQuotes.tsx";
+import { AdminPanel } from "./components/admin/AdminPanel.tsx";
+import { GlobeView } from "./components/GlobeView.tsx";
 import { PluginList, PluginStatusSummary } from "./components/PluginList.tsx";
+import { SourceHealthPanel } from "./components/SourceHealthPanel.tsx";
 import { RecordCounts } from "./components/RecordCounts.tsx";
 import { ViewPanel } from "./components/ViewPanel.tsx";
 import type { InternetAnomalyData, MarketQuoteData } from "./types.ts";
@@ -22,9 +28,19 @@ export function App() {
   const [baseUrl, setBaseUrl] = useState(
     () => localStorage.getItem(STORAGE_KEY) ?? DEFAULT_BASE,
   );
+  const [theme, toggleTheme] = useTheme();
+  const { apiKey, setApiKey } = useAuth();
 
-  const { plugins, views, records, coreVersion, connection, reachable } =
-    useDashboard(baseUrl);
+  const {
+    plugins,
+    views,
+    records,
+    coreVersion,
+    connection,
+    reachable,
+    lastRefreshed,
+    refresh,
+  } = useDashboard(baseUrl);
   const anomalies = useRecords<InternetAnomalyData>(
     baseUrl,
     "internet.anomaly",
@@ -48,7 +64,11 @@ export function App() {
         baseUrl={baseUrl}
         connection={connection}
         coreVersion={coreVersion}
+        lastRefreshed={lastRefreshed}
+        theme={theme}
         onBaseUrlChange={updateBaseUrl}
+        onRefresh={refresh}
+        onThemeToggle={toggleTheme}
       />
 
       <main className="mx-auto grid max-w-[1200px] gap-6 p-4 sm:gap-8 sm:p-6">
@@ -57,6 +77,10 @@ export function App() {
             Can't reach the server at <code>{baseUrl}</code>. Is it running?
           </p>
         )}
+
+        <Section title="Data Sources" collapsible defaultOpen={true}>
+          <SourceHealthPanel plugins={plugins} />
+        </Section>
 
         <Section
           title="Plugins"
@@ -79,6 +103,10 @@ export function App() {
           </Section>
         )}
 
+        <Section title="World Overview" collapsible defaultOpen={true}>
+          <GlobeView views={views} />
+        </Section>
+
         <Section title="Views">
           {views.length === 0 ? (
             <p className="text-muted italic">
@@ -95,6 +123,15 @@ export function App() {
 
         <Section title="Records">
           <RecordCounts records={records} onSelect={fetchRecords} />
+        </Section>
+
+        <Section title="Admin" collapsible defaultOpen={false}>
+          <AdminPanel
+            client={client}
+            plugins={plugins}
+            apiKey={apiKey}
+            onApiKeyChange={setApiKey}
+          />
         </Section>
       </main>
     </>

@@ -11,6 +11,7 @@ export interface PluginInfo {
   version?: string;
   lastRunAt?: string;
   lastError?: string;
+  kind?: "integration" | "processor";
 }
 
 export interface HealthInfo {
@@ -230,5 +231,93 @@ export function isSeismicItem(value: unknown): value is SeismicItem {
     "magnitude" in value &&
     "latitude" in value &&
     "longitude" in value
+  );
+}
+
+export interface NewsFeedItem {
+  id: string;
+  title: string;
+  url: string;
+  domain: string;
+  language: string;
+  sourceCountry: string;
+  seenDate: string;
+  source: string;
+  summary?: string;
+  updatedAt: string;
+}
+
+export interface WildfireFeedItem {
+  id: string;
+  latitude: number;
+  longitude: number;
+  brightness: number;
+  frp: number;
+  confidence: string;
+  instrument: string;
+  acquisitionDate: string;
+  acquisitionTime: string;
+  satellite: string;
+  updatedAt: string;
+}
+
+export interface FlightFeedItem {
+  id: string;
+  icao24: string;
+  callsign: string | null;
+  latitude: number;
+  longitude: number;
+  altitudeM: number | null;
+  speedKt: number | null;
+  heading: number | null;
+  onGround: boolean;
+  source: string;
+  updatedAt: string;
+}
+
+export function isNewsFeedItem(value: unknown): value is NewsFeedItem {
+  return (
+    typeof value === "object" &&
+    value !== null &&
+    "url" in value &&
+    "domain" in value &&
+    "seenDate" in value
+  );
+}
+
+export function isWildfireFeedItem(value: unknown): value is WildfireFeedItem {
+  return (
+    typeof value === "object" &&
+    value !== null &&
+    "frp" in value &&
+    "brightness" in value &&
+    "satellite" in value
+  );
+}
+
+export interface SecretSpec {
+  key: string;
+  required: boolean;
+  isSet: boolean;
+}
+
+export interface ProvisioningSpec {
+  pluginId: string;
+  secrets: SecretSpec[];
+}
+
+export interface UpdateInfo {
+  package: string;
+  current: string;
+  latest: string;
+  hasUpdate: boolean;
+}
+
+export function isFlightFeedItem(value: unknown): value is FlightFeedItem {
+  return (
+    typeof value === "object" &&
+    value !== null &&
+    "icao24" in value &&
+    "onGround" in value
   );
 }
